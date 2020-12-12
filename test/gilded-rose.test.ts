@@ -31,4 +31,20 @@ describe("Gilded Rose", function () {
     const items = gildedRose.updateQuality();
     expect(items[0].quality).toEqual(3);
   })
+
+  it("La calidad de un artículo nunca es mayor a 50", function(){
+    const gildedRose = new GildedRose([new Item("Aged Brie", 0, 50), new Item("Backstage passes to a TAFKAL80ETC concert", 1, 50)]);
+    const items = gildedRose.updateQuality();
+    expect(items[0].quality).toEqual(50);
+    expect(items[1].quality).toEqual(50);
+  })
+
+  it("El artículo \"Sulfuras\" (Sulfuras), siendo un artículo legendario, no modifica su fecha de venta ni se degrada en calidad", function(){})
+
+  it("Una \"Entrada al Backstage\", como el queso brie, incrementa su calidad a medida que la fecha de venta se aproxima: si faltan 10 días o menos para el concierto, la calidad se incrementa en 2 unidades", function(){})
+
+  it("Una \"Entrada al Backstage\", como el queso brie, incrementa su calidad a medida que la fecha de venta se aproxima: si faltan 5 días o menos, la calidad se incrementa en 3 unidades", function(){})
+
+  it("Una \"Entrada al Backstage\", como el queso brie, incrementa su calidad a medida que la fecha de venta se aproxima: luego de la fecha de venta la calidad cae a 0", function(){})
+
 });
