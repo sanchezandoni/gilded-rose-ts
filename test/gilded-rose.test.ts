@@ -39,7 +39,12 @@ describe("Gilded Rose", function () {
     expect(items[1].quality).toEqual(50);
   })
 
-  it("El artículo \"Sulfuras\" (Sulfuras), siendo un artículo legendario, no modifica su fecha de venta ni se degrada en calidad", function(){})
+  it("El artículo \"Sulfuras\" (Sulfuras), siendo un artículo legendario, no modifica su fecha de venta ni se degrada en calidad", function(){
+    const gildedRose = new GildedRose([new Item("Sulfuras, Hand of Ragnaros", 1, 1)]);
+    const items = gildedRose.updateQuality();
+    expect(items[0].sellIn).toEqual(1);
+    expect(items[0].quality).toEqual(1);
+  })
 
   it("Una \"Entrada al Backstage\", como el queso brie, incrementa su calidad a medida que la fecha de venta se aproxima: si faltan 10 días o menos para el concierto, la calidad se incrementa en 2 unidades", function(){})
 
