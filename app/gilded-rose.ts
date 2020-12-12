@@ -52,8 +52,9 @@ function updateQualityForOtherItems(item:Item){
     item.sellIn = item.sellIn - 1;
 }
 
+const MAX_QUALITY = 50;
 function updateQualityForBackstage(item:Item){
-    if (item.quality < 50) {
+    if (item.quality < MAX_QUALITY) {
         if (item.sellIn < 6) {
             item.quality = item.quality + 3
         }else if (item.sellIn < 11) {
@@ -69,7 +70,7 @@ function updateQualityForBackstage(item:Item){
 }
 
 function updateQualityForAgedBrie(item:Item){
-    if (item.quality < 50) {
+    if (item.quality < MAX_QUALITY) {
         if (item.sellIn <= 0) item.quality = item.quality + 2
         else item.quality = item.quality + 1
     }
