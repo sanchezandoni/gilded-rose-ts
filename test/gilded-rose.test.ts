@@ -76,4 +76,11 @@ describe("Gilded Rose", function () {
     expect(items[1].quality).toEqual(0);
   })
 
+  it("Un item conjurado degrada su calidad el doble que los normales", function(){
+    const gildedRose =  new GildedRose([new Item("Conjurado", 1, 2),new Item("Conjurado", -1, 4)])
+    const items = gildedRose.updateQuality()
+    expect(items[0].quality).toEqual(0)
+    expect(items[1].quality).toEqual(0)
+  })
+
 });
