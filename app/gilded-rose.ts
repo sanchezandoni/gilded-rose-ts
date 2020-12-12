@@ -35,11 +35,29 @@ function updateQualityByProductType(currentItem:Item):Item {
         case 'Sulfuras, Hand of Ragnaros':
             updatedItem = updateQualityForSulfuras(currentItem)
             break
+        case 'Conjurado':
+            updatedItem = updateQualityForConjurados(currentItem)
+            break
         default:
             updatedItem = updateQualityForOtherItems(currentItem)
             break
     }
     return updatedItem
+}
+
+function updateQualityForConjurados(item:Item):Item{
+    let newItem = new Item(item.name, item.sellIn, item.quality)
+    if (!hasReachedMinimumQuality(item)) {
+        if(hasReachedSellTime(item)){
+            newItem.quality = item.quality - 4
+        }else{
+            newItem.quality = item.quality - 2
+        }
+    }
+    
+    newItem.sellIn = item.sellIn - 1;
+
+    return newItem
 }
 
 function updateQualityForOtherItems(item:Item): Item{
