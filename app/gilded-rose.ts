@@ -41,8 +41,8 @@ export class GildedRose {
 }
 
 function updateQualityForOtherItems(item:Item){
-    if (item.quality > 0) {
-        if(item.sellIn === 0){
+    if (!itemHasReachedMinimumQuality(item)) {
+        if(itemHasReachedSellTime(item)){
             item.quality = item.quality - 2
         }else{
             item.quality = item.quality - 1
@@ -52,12 +52,24 @@ function updateQualityForOtherItems(item:Item){
     item.sellIn = item.sellIn - 1;
 }
 
-const MAX_QUALITY = 50;
+function updateQualityForAgedBrie(item:Item){
+    if (!itemHasReachedMaxQuality(item)) {
+        if (item.sellIn <= 0) item.quality = item.quality + 2
+        else item.quality = item.quality + 1
+    }
+    item.sellIn = item.sellIn - 1;
+}
+
+function updateQualityForSulfuras(item:Item){
+    //no modifica su fecha de venta ni se degrada en calidad
+    //por lo tanto esta función no hace nada
+}
+
 function updateQualityForBackstage(item:Item){
-    if (item.quality < MAX_QUALITY) {
-        if (item.sellIn < 6) {
+    if (!itemHasReachedMaxQuality(item)) {
+        if (concertDateIsImminent(item)) {
             item.quality = item.quality + 3
-        }else if (item.sellIn < 11) {
+        }else if (concertDateIsNear(item)) {
             item.quality = item.quality + 2
         }else{
             item.quality = item.quality + 1
@@ -67,16 +79,25 @@ function updateQualityForBackstage(item:Item){
         item.quality = item.quality - item.quality
     }
     item.sellIn = item.sellIn - 1;
-}
 
-function updateQualityForAgedBrie(item:Item){
-    if (item.quality < MAX_QUALITY) {
-        if (item.sellIn <= 0) item.quality = item.quality + 2
-        else item.quality = item.quality + 1
+    function concertDateIsImminent(item:Item):Boolean{
+        return (item.sellIn < 6)
+    }
+
+    function concertDateIsNear(item:Item):Boolean{
+        return (item.sellIn < 11)
     }
 }
 
-function updateQualityForSulfuras(item:Item){
-    //no modifica su fecha de venta ni se degrada en calidad
-    //por lo tanto esta función no hace nada
+function itemHasReachedSellTime(item:Item):Boolean{
+    return item.sellIn === 0
+}
+
+function itemHasReachedMinimumQuality(item:Item):Boolean{
+    return item.quality === 0
+}
+
+function itemHasReachedMaxQuality(item:Item):Boolean{
+    const MAX_QUALITY = 50;
+    return (item.quality >= MAX_QUALITY)
 }
