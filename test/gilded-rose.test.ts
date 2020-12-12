@@ -4,7 +4,6 @@ describe("Gilded Rose", function () {
   it("Al final de cada día, nuestro sistema decrementa ambos valores para cada artículo mediante el método updateQuality", function(){
     const gildedRose = new GildedRose([new Item("foo", 1, 1)]);
     const items = gildedRose.updateQuality();
-    expect(items[0].sellIn).toEqual(0);
     expect(items[0].quality).toEqual(0);
   })
 
@@ -81,6 +80,20 @@ describe("Gilded Rose", function () {
     const items = gildedRose.updateQuality()
     expect(items[0].quality).toEqual(0)
     expect(items[1].quality).toEqual(0)
+  })
+
+  it("Todos los elementos decrementan en uno su dia para la venta, excepto las Sulfuras",function(){
+    const gildedRose = new GildedRose([
+      new Item("Aged Brie", -1, 1), 
+      new Item("Backstage passes to a TAFKAL80ETC concert", 0, 1),
+      new Item("Sulfuras, Hand of Ragnaros", 1, 1),
+      new Item("foo", 3, 1)
+    ]);
+    const items = gildedRose.updateQuality();
+    expect(items[0].sellIn).toEqual(-2);
+    expect(items[1].sellIn).toEqual(-1);
+    expect(items[2].sellIn).toEqual(1);
+    expect(items[3].sellIn).toEqual(2);
   })
 
 });
