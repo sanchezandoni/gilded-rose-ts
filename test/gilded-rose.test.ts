@@ -32,11 +32,16 @@ describe("Gilded Rose", function () {
     expect(items[0].quality).toEqual(3);
   })
 
-  it("La calidad de un artículo nunca es mayor a 50", function(){
-    const gildedRose = new GildedRose([new Item("Aged Brie", 0, 50), new Item("Backstage passes to a TAFKAL80ETC concert", 1, 50)]);
+  it("La calidad de un artículo nunca es mayor a 50, excepto los items sulfuras que son de 80", function(){
+    const gildedRose = new GildedRose([
+      new Item("Aged Brie", 0, 50), 
+      new Item("Backstage passes to a TAFKAL80ETC concert", 1, 50),
+      new Item("Sulfuras, Hand of Ragnaros", 1, 80)
+    ]);
     const items = gildedRose.updateQuality();
     expect(items[0].quality).toEqual(50);
     expect(items[1].quality).toEqual(50);
+    expect(items[2].quality).toEqual(80);
   })
 
   it("El artículo \"Sulfuras\" (Sulfuras), siendo un artículo legendario, no modifica su fecha de venta ni se degrada en calidad", function(){
