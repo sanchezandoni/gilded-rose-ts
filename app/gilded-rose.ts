@@ -18,86 +18,95 @@ export class GildedRose {
     }
     
     updateQuality() {
-        for (let i = 0; i < this.items.length; i++) {
-            var currentItem = this.items[i]
-
-            switch(currentItem.name){
-                case 'Aged Brie':
-                    updateQualityForAgedBrie(currentItem);
-                    break
-                case 'Backstage passes to a TAFKAL80ETC concert':
-                    updateQualityForBackstage(currentItem)
-                    break
-                case 'Sulfuras, Hand of Ragnaros':
-                    updateQualityForSulfuras(currentItem)
-                    break
-                default:
-                    updateQualityForOtherItems(currentItem)
-                    break
-            }
-        }
+        this.items = this.items.map(updateQualityByProductType)
         return this.items;
     }
 }
 
-function updateQualityForOtherItems(item:Item){
-    if (!itemHasReachedMinimumQuality(item)) {
-        if(itemHasReachedSellTime(item)){
-            item.quality = item.quality - 2
+function updateQualityByProductType(currentItem:Item):Item {
+    var updatedItem:Item
+    switch(currentItem.name){
+        case 'Aged Brie':
+            updatedItem = updateQualityForAgedBrie(currentItem)
+            break
+        case 'Backstage passes to a TAFKAL80ETC concert':
+            updatedItem = updateQualityForBackstage(currentItem)
+            break
+        case 'Sulfuras, Hand of Ragnaros':
+            updatedItem = updateQualityForSulfuras(currentItem)
+            break
+        default:
+            updatedItem = updateQualityForOtherItems(currentItem)
+            break
+    }
+    return updatedItem
+}
+
+function updateQualityForOtherItems(item:Item): Item{
+    let newItem = new Item(item.name, item.sellIn, item.quality)
+    if (!hasReachedMinimumQuality(item)) {
+        if(hasReachedSellTime(item)){
+            newItem.quality = item.quality - 2
         }else{
-            item.quality = item.quality - 1
+            newItem.quality = item.quality - 1
         }
     }
     
-    item.sellIn = item.sellIn - 1;
+    newItem.sellIn = item.sellIn - 1;
+
+    return newItem
 }
 
-function updateQualityForAgedBrie(item:Item){
-    if (!itemHasReachedMaxQuality(item)) {
-        if (item.sellIn <= 0) item.quality = item.quality + 2
-        else item.quality = item.quality + 1
+function updateQualityForAgedBrie(item:Item):Item{
+    let newItem = new Item(item.name, item.sellIn, item.quality)
+    if (!hasReachedMaxQuality(item)) {
+        if (hasReachedSellTime(item)) newItem.quality = item.quality + 2
+        else newItem.quality = item.quality + 1
     }
-    item.sellIn = item.sellIn - 1;
+    newItem.sellIn = item.sellIn - 1;
+    return newItem
 }
 
-function updateQualityForSulfuras(item:Item){
-    //no modifica su fecha de venta ni se degrada en calidad
-    //por lo tanto esta función no hace nada
+function updateQualityForSulfuras(item:Item):Item{
+    return new Item(item.name,item.sellIn,item.quality)
 }
 
-function updateQualityForBackstage(item:Item){
-    if (!itemHasReachedMaxQuality(item)) {
-        if (concertDateIsImminent(item)) {
-            item.quality = item.quality + 3
-        }else if (concertDateIsNear(item)) {
-            item.quality = item.quality + 2
+function updateQualityForBackstage(item:Item):Item{
+    let newItem = new Item(item.name,item.sellIn,item.quality)
+    if (!hasReachedMaxQuality(item)) {
+        if (sellInDateIsImminent(item)) {
+            newItem.quality = item.quality + 3
+        }else if (sellInDateIsNear(item)) {
+            newItem.quality = item.quality + 2
         }else{
-            item.quality = item.quality + 1
+            newItem.quality = item.quality + 1
         }
     }
     if (item.sellIn <= 0) {
-        item.quality = item.quality - item.quality
+        newItem.quality = item.quality - item.quality
     }
-    item.sellIn = item.sellIn - 1;
+    newItem.sellIn = item.sellIn - 1;
 
-    function concertDateIsImminent(item:Item):Boolean{
-        return (item.sellIn < 6)
-    }
-
-    function concertDateIsNear(item:Item):Boolean{
-        return (item.sellIn < 11)
-    }
+    return newItem
 }
 
-function itemHasReachedSellTime(item:Item):Boolean{
-    return item.sellIn === 0
+function hasReachedSellTime(item:Item):Boolean{
+    return item.sellIn <= 0
 }
 
-function itemHasReachedMinimumQuality(item:Item):Boolean{
+function hasReachedMinimumQuality(item:Item):Boolean{
     return item.quality === 0
 }
 
-function itemHasReachedMaxQuality(item:Item):Boolean{
+function hasReachedMaxQuality(item:Item):Boolean{
     const MAX_QUALITY = 50;
     return (item.quality >= MAX_QUALITY)
+}
+
+function sellInDateIsImminent(item:Item):Boolean{
+    return (item.sellIn < 6)
+}
+
+function sellInDateIsNear(item:Item):Boolean{
+    return (item.sellIn < 11)
 }
