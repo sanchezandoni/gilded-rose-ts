@@ -46,10 +46,29 @@ describe("Gilded Rose", function () {
     expect(items[0].quality).toEqual(1);
   })
 
-  it("Una \"Entrada al Backstage\", como el queso brie, incrementa su calidad a medida que la fecha de venta se aproxima: si faltan 10 días o menos para el concierto, la calidad se incrementa en 2 unidades", function(){})
+  it("Una \"Entrada al Backstage\", como el queso brie, incrementa su calidad a medida que la fecha de venta se aproxima", function(){
+    const gildedRose = new GildedRose([new Item("Backstage passes to a TAFKAL80ETC concert", 12, 1)]);
+    const items = gildedRose.updateQuality();
+    expect(items[0].quality).toEqual(2);
+  })
 
-  it("Una \"Entrada al Backstage\", como el queso brie, incrementa su calidad a medida que la fecha de venta se aproxima: si faltan 5 días o menos, la calidad se incrementa en 3 unidades", function(){})
+  it("Una \"Entrada al Backstage\", como el queso brie, incrementa su calidad a medida que la fecha de venta se aproxima: si faltan 10 días o menos para el concierto, la calidad se incrementa en 2 unidades", function(){
+    const gildedRose = new GildedRose([new Item("Backstage passes to a TAFKAL80ETC concert", 10, 1)]);
+    const items = gildedRose.updateQuality();
+    expect(items[0].quality).toEqual(3);
+  })
 
-  it("Una \"Entrada al Backstage\", como el queso brie, incrementa su calidad a medida que la fecha de venta se aproxima: luego de la fecha de venta la calidad cae a 0", function(){})
+  it("Una \"Entrada al Backstage\", como el queso brie, incrementa su calidad a medida que la fecha de venta se aproxima: si faltan 5 días o menos, la calidad se incrementa en 3 unidades", function(){
+    const gildedRose = new GildedRose([new Item("Backstage passes to a TAFKAL80ETC concert", 3, 1)]);
+    const items = gildedRose.updateQuality();
+    expect(items[0].quality).toEqual(4);
+  })
+
+  it("Una \"Entrada al Backstage\", como el queso brie, incrementa su calidad a medida que la fecha de venta se aproxima: luego de la fecha de venta la calidad cae a 0", function(){
+    const gildedRose = new GildedRose([new Item("Backstage passes to a TAFKAL80ETC concert", 0, 5),new Item("Backstage passes to a TAFKAL80ETC concert", -2, 0)]);
+    const items = gildedRose.updateQuality();
+    expect(items[0].quality).toEqual(0);
+    expect(items[1].quality).toEqual(0);
+  })
 
 });
